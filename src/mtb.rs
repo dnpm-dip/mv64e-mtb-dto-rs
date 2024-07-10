@@ -312,19 +312,19 @@ pub struct CodingEcog {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum PurpleCode {
     #[serde(rename = "0")]
-    The0,
+    Code0,
 
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 
     #[serde(rename = "4")]
-    The4,
+    Code4,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
