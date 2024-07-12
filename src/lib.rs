@@ -34,7 +34,7 @@ impl FromStr for Mtb {
     /// use std::str::FromStr;
     ///
     /// fn main() {
-    ///     const MTB_JSON: &str = include_str!("../tests/fake_MTBFile.json");
+    ///     const MTB_JSON: &str = include_str!("../tests/mv64e-mtb-fake-patient.json");
     ///
     ///     let mtb_file = Mtb::from_str(MTB_JSON).unwrap();
     ///     println!("{:#?}", mtb_file);
