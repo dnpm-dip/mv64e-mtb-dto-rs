@@ -58,11 +58,6 @@ impl Mtb {
             care_plans: None,
             claim_responses: None,
             claims: None,
-            consent: Consent {
-                id: None,
-                patient: None,
-                status: None,
-            },
             diagnoses: None,
             ecog_status: None,
             episode: None,

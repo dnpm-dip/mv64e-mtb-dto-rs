@@ -12,8 +12,6 @@ pub struct Mtb {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub claims: Option<Vec<Claim>>,
 
-    pub consent: Consent,
-
     #[serde(skip_serializing_if = "Option::is_none")]
     pub diagnoses: Option<Vec<MtbDiagnosis>>,
 
@@ -128,12 +126,12 @@ pub struct ClaimResponse {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClaimResponseClaim {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-
     #[serde(rename = "type")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub claim_response_claim_type: Option<ClaimResponseClaimType>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -199,26 +197,6 @@ pub struct Claim {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub therapy: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Consent {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub patient: Option<Patient>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<ConsentStatus>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ConsentStatus {
-    Active,
-
-    Rejected,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -600,6 +578,9 @@ pub struct Cnv {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cn_b: Option<f64>,
 
+    #[serde(rename = "type")]
+    pub cnv_type: CnvType,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_number_neutral_lo_h: Option<Vec<CopyNumberNeutralLoH>>,
 
@@ -620,9 +601,6 @@ pub struct Cnv {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_copy_number: Option<i64>,
-
-    #[serde(rename = "type")]
-    pub cnv_type: CnvType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
