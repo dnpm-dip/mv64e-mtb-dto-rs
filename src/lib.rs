@@ -59,15 +59,17 @@ impl Mtb {
             claim_responses: None,
             claims: None,
             diagnoses: None,
-            ecog_status: None,
+            performance_status: None,
             episode: None,
+            episodes_of_care: None,
             genetic_counselling_requests: None,
             histology_reports: None,
-            last_guideline_therapies: None,
+            guideline_therapies: None,
             molecular_therapies: None,
             ngs_reports: None,
             patient: MtbPatient {
                 address: None,
+                age: None,
                 birth_date: String::new(),
                 date_of_death: None,
                 gender: CodingGender {
@@ -77,13 +79,14 @@ impl Mtb {
                     version: None,
                 },
                 id: patient_id.to_string(),
-                insurance: None,
+                health_insurance: None,
+                vital_status: None,
             },
-            previous_guideline_therapies: None,
             recommendations: None,
             responses: None,
             specimens: None,
             study_inclusion_requests: None,
+            guideline_procedures: None,
         }
     }
 }
