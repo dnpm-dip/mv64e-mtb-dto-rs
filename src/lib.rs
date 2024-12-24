@@ -67,6 +67,7 @@ impl Mtb {
             guideline_therapies: None,
             molecular_therapies: None,
             ngs_reports: None,
+            ihc_reports: None,
             patient: MtbPatient {
                 address: None,
                 age: None,
@@ -87,6 +88,7 @@ impl Mtb {
             specimens: None,
             study_inclusion_requests: None,
             guideline_procedures: None,
+            therapies: None,
         }
     }
 }

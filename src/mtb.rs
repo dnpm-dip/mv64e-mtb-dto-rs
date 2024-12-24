@@ -34,6 +34,9 @@ pub struct Mtb {
     pub histology_reports: Option<Vec<HistologyReport>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub ihc_reports: Option<Vec<IhcReport>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub molecular_therapies: Option<Vec<MolecularTherapy>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -55,6 +58,9 @@ pub struct Mtb {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub study_inclusion_requests: Option<Vec<StudyEnrollmentRecommendation>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub therapies: Option<Vec<Therapy>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -729,7 +735,7 @@ pub enum StatusReasonCode {
 #[serde(rename_all = "camelCase")]
 pub struct MtbMedicationTherapy {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub based_on: Option<String>,
+    pub based_on: Option<Reference>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub diagnosis: Option<String>,
@@ -860,6 +866,177 @@ pub struct HistologyReportSpecimen {
 
     #[serde(rename = "type")]
     pub specimen_type: SpecimenType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IhcReport {
+    pub block_id: ExternalId,
+
+    pub date: String,
+
+    pub id: String,
+
+    pub journal_id: ExternalId,
+
+    pub msi_mmr_results: Vec<MsiMmrResult>,
+
+    pub patient: Reference,
+
+    pub protein_expression_results: Vec<ProteinExpressionResult>,
+
+    pub specimen: Reference,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ExternalId {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    pub value: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MsiMmrResult {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ic_score: Option<CodingProteinExpressionIcScore>,
+
+    pub id: String,
+
+    pub patient: Reference,
+
+    pub protein: Coding,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tc_score: Option<CodingProteinExpressionTcScore>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tps_score: Option<i64>,
+
+    pub value: CodingProteinExpressionResult,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CodingProteinExpressionIcScore {
+    pub code: IcScoreCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum IcScoreCode {
+    #[serde(rename = "0")]
+    Code0,
+
+    #[serde(rename = "1")]
+    Code1,
+
+    #[serde(rename = "2")]
+    Code2,
+
+    #[serde(rename = "3")]
+    Code3,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CodingProteinExpressionTcScore {
+    pub code: TcScoreCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum TcScoreCode {
+    #[serde(rename = "0")]
+    Code0,
+
+    #[serde(rename = "1")]
+    Code1,
+
+    #[serde(rename = "2")]
+    Code2,
+
+    #[serde(rename = "3")]
+    Code3,
+
+    #[serde(rename = "4")]
+    Code4,
+
+    #[serde(rename = "5")]
+    Code5,
+
+    #[serde(rename = "6")]
+    Code6,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CodingProteinExpressionResult {
+    pub code: ProteinExpressionResultCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum ProteinExpressionResultCode {
+    Exp,
+
+    #[serde(rename = "not-exp")]
+    NotExp,
+
+    #[serde(rename = "1+")]
+    Code1Plus,
+
+    #[serde(rename = "2+")]
+    Code2Plus,
+
+    #[serde(rename = "3+")]
+    Code3Plus,
+
+    Unknown,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProteinExpressionResult {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ic_score: Option<CodingProteinExpressionIcScore>,
+
+    pub id: String,
+
+    pub patient: Reference,
+
+    pub protein: Coding,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tc_score: Option<CodingProteinExpressionTcScore>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tps_score: Option<i64>,
+
+    pub value: CodingProteinExpressionResult,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -1326,14 +1503,6 @@ pub struct Snv {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ExternalId {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub system: Option<String>,
-
-    pub value: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 pub struct Position {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub end: Option<f64>,
@@ -1490,7 +1659,7 @@ pub struct PerformanceStatus {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CodingEcog {
-    pub code: PurpleCode,
+    pub code: EcogCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1503,7 +1672,7 @@ pub struct CodingEcog {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum PurpleCode {
+pub enum EcogCode {
     #[serde(rename = "0")]
     Code0,
 
@@ -1550,7 +1719,7 @@ pub enum ResponseTherapyType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CodingRecist {
-    pub code: FluffyCode,
+    pub code: RecistCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1563,7 +1732,7 @@ pub struct CodingRecist {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum FluffyCode {
+pub enum RecistCode {
     #[serde(rename = "CR")]
     Cr,
 
@@ -1695,4 +1864,9 @@ pub enum TumorSpecimenType {
     LiquidBiopsy,
 
     Unknown,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Therapy {
+    pub history: Vec<MtbMedicationTherapy>,
 }
