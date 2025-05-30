@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -33,7 +34,10 @@ pub struct Mtb {
     pub ihc_reports: Option<Vec<IhcReport>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub ngs_reports: Option<Vec<SomaticNgsReportMetadata>>,
+    pub metadata: Option<MvhMetadata>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ngs_reports: Option<Vec<SomaticNgsReport>>,
 
     pub patient: Patient,
 
@@ -71,6 +75,9 @@ pub struct MtbCarePlan {
     pub medication_recommendations: Option<Vec<MtbMedicationRecommendation>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub no_sequencing_performed_reason: Option<CarePlanNoSequencingPerformedReasonCoding>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<Vec<String>>,
 
     pub patient: Reference,
@@ -85,7 +92,7 @@ pub struct MtbCarePlan {
     pub rebiopsy_requests: Option<Vec<RebiopsyRequest>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status_reason: Option<CodingMtbCarePlanStatusReason>,
+    pub recommendations_missing_reason: Option<MtbCarePlanRecommendationsMissingReasonCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub study_enrollment_recommendations: Option<Vec<MtbStudyEnrollmentRecommendation>>,
@@ -101,7 +108,7 @@ pub struct GeneticCounselingRecommendation {
 
     pub patient: Reference,
 
-    pub reason: CodingGeneticCounselingRecommendationReason,
+    pub reason: GeneticCounselingRecommendationReasonCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -122,8 +129,8 @@ pub struct Reference {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingGeneticCounselingRecommendationReason {
-    pub code: ReasonCode,
+pub struct GeneticCounselingRecommendationReasonCoding {
+    pub code: GeneticCounselingRecommendationReasonCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -138,7 +145,7 @@ pub struct CodingGeneticCounselingRecommendationReason {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum ReasonCode {
+pub enum GeneticCounselingRecommendationReasonCodingCode {
     #[serde(rename = "family-anamnesis")]
     FamilyAnamnesis,
 
@@ -171,7 +178,7 @@ pub struct HistologyReevaluationRequest {
 #[serde(rename_all = "camelCase")]
 pub struct MtbMedicationRecommendation {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub category: Option<CodingMtbMedicationRecommendationCategory>,
+    pub category: Option<MtbMedicationRecommendationCategoryCoding>,
 
     pub id: String,
 
@@ -180,11 +187,11 @@ pub struct MtbMedicationRecommendation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub level_of_evidence: Option<LevelOfEvidence>,
 
-    pub medication: Vec<CodingAtcUnregisteredMedication>,
+    pub medication: Vec<AtcUnregisteredMedicationCoding>,
 
     pub patient: Reference,
 
-    pub priority: CodingRecommendationPriority,
+    pub priority: RecommendationPriorityCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<Reference>,
@@ -193,13 +200,13 @@ pub struct MtbMedicationRecommendation {
     pub supporting_variants: Option<Vec<GeneAlterationReference>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub use_type: Option<CodingMtbMedicationRecommendationUseType>,
+    pub use_type: Option<MtbMedicationRecommendationUseTypeCoding>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbMedicationRecommendationCategory {
-    pub code: CodingMtbMedicationRecommendationCategoryCode,
+pub struct MtbMedicationRecommendationCategoryCoding {
+    pub code: MtbMedicationRecommendationCategoryCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -213,7 +220,7 @@ pub struct CodingMtbMedicationRecommendationCategory {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingMtbMedicationRecommendationCategoryCode {
+pub enum MtbMedicationRecommendationCategoryCodingCode {
     #[serde(rename = "CH")]
     Ch,
 
@@ -237,9 +244,9 @@ pub enum CodingMtbMedicationRecommendationCategoryCode {
 #[serde(deny_unknown_fields)]
 pub struct LevelOfEvidence {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub addendums: Option<Vec<CodingLevelOfEvidenceAddendum>>,
+    pub addendums: Option<Vec<LevelOfEvidenceAddendumCoding>>,
 
-    pub grading: CodingLevelOfEvidenceGrading,
+    pub grading: LevelOfEvidenceGradingCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub publications: Option<Vec<PublicationReference>>,
@@ -247,8 +254,8 @@ pub struct LevelOfEvidence {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingLevelOfEvidenceAddendum {
-    pub code: AddendumCode,
+pub struct LevelOfEvidenceAddendumCoding {
+    pub code: LevelOfEvidenceAddendumCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -262,7 +269,7 @@ pub struct CodingLevelOfEvidenceAddendum {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum AddendumCode {
+pub enum LevelOfEvidenceAddendumCodingCode {
     #[serde(rename = "is")]
     Is,
 
@@ -276,8 +283,8 @@ pub enum AddendumCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingLevelOfEvidenceGrading {
-    pub code: LevelOfEvidenceCode,
+pub struct LevelOfEvidenceGradingCoding {
+    pub code: LevelOfEvidenceGradingCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -292,7 +299,7 @@ pub struct CodingLevelOfEvidenceGrading {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
-pub enum LevelOfEvidenceCode {
+pub enum LevelOfEvidenceGradingCodingCode {
     #[serde(rename = "m1A")]
     M1A,
 
@@ -337,15 +344,15 @@ pub struct PublicationReference {
 #[serde(deny_unknown_fields)]
 pub enum PublicationSystem {
     #[serde(rename = "https://pubmed.ncbi.nlm.nih.gov")]
-    HttpsPubmedNcbiNlmNihGov,
+    PubmedNcbiNlmNihGov,
 
     #[serde(rename = "https://www.doi.org")]
-    HttpsWwwDoiOrg,
+    DoiOrg,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingAtcUnregisteredMedication {
+pub struct AtcUnregisteredMedicationCoding {
     pub code: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -362,15 +369,15 @@ pub struct CodingAtcUnregisteredMedication {
 #[serde(rename_all = "snake_case")]
 pub enum RequestedMedicationSystem {
     #[serde(rename = "http://fhir.de/CodeSystem/bfarm/atc")]
-    HttpFhirDeCodeSystemBfarmAtc,
+    FhirDeCodeSystemBfarmAtc,
 
     Undefined,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingRecommendationPriority {
-    pub code: PriorityCode,
+pub struct RecommendationPriorityCoding {
+    pub code: RecommendationPriorityCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -384,18 +391,18 @@ pub struct CodingRecommendationPriority {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum PriorityCode {
+pub enum RecommendationPriorityCodingCode {
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 
     #[serde(rename = "4")]
-    The4,
+    Code4,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -427,8 +434,8 @@ pub struct Coding {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbMedicationRecommendationUseType {
-    pub code: UseTypeCode,
+pub struct MtbMedicationRecommendationUseTypeCoding {
+    pub code: MtbMedicationRecommendationUseTypeCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -443,7 +450,7 @@ pub struct CodingMtbMedicationRecommendationUseType {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum UseTypeCode {
+pub enum MtbMedicationRecommendationUseTypeCodingCode {
     Compassionate,
 
     #[serde(rename = "in-label")]
@@ -460,32 +467,8 @@ pub enum UseTypeCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[serde(rename_all = "camelCase")]
-pub struct ProcedureRecommendation {
-    pub code: CodingMtbProcedureRecommendationCategory,
-
-    pub id: String,
-
-    pub issued_on: String,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub level_of_evidence: Option<LevelOfEvidence>,
-
-    pub patient: Reference,
-
-    pub priority: CodingRecommendationPriority,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reason: Option<Reference>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub supporting_variants: Option<Vec<GeneAlterationReference>>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct CodingMtbProcedureRecommendationCategory {
-    pub code: CodingMtbProcedureRecommendationCategoryCode,
+pub struct CarePlanNoSequencingPerformedReasonCoding {
+    pub code: NoSequencingPerformedReasonCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -499,7 +482,64 @@ pub struct CodingMtbProcedureRecommendationCategory {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingMtbProcedureRecommendationCategoryCode {
+#[serde(rename_all = "kebab-case")]
+pub enum NoSequencingPerformedReasonCode {
+    #[serde(rename = "non-genetic-cause")]
+    NonGeneticCause,
+
+    #[serde(rename = "not-rare-disease")]
+    NotRareDisease,
+
+    Other,
+
+    Psychosomatic,
+
+    #[serde(rename = "targeted-diagnostics-recommended")]
+    TargetedDiagnosticsRecommended,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcedureRecommendation {
+    pub code: MtbProcedureRecommendationCategoryCoding,
+
+    pub id: String,
+
+    pub issued_on: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub level_of_evidence: Option<LevelOfEvidence>,
+
+    pub patient: Reference,
+
+    pub priority: RecommendationPriorityCoding,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<Reference>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub supporting_variants: Option<Vec<GeneAlterationReference>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MtbProcedureRecommendationCategoryCoding {
+    pub code: MtbProcedureRecommendationCategoryCodingCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub enum MtbProcedureRecommendationCategoryCodingCode {
     #[serde(rename = "AS")]
     As,
 
@@ -534,8 +574,8 @@ pub struct RebiopsyRequest {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbCarePlanStatusReason {
-    pub code: CodingMtbCarePlanStatusReasonCode,
+pub struct MtbCarePlanRecommendationsMissingReasonCoding {
+    pub code: MtbCarePlanRecommendationsMissingReasonCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -550,22 +590,9 @@ pub struct CodingMtbCarePlanStatusReason {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingMtbCarePlanStatusReasonCode {
+pub enum MtbCarePlanRecommendationsMissingReasonCodingCode {
     #[serde(rename = "no-target")]
     NoTarget,
-
-    #[serde(rename = "non-genetic-cause")]
-    NonGeneticCause,
-
-    #[serde(rename = "not-rare-disease")]
-    NotRareDisease,
-
-    Other,
-
-    Psychosomatic,
-
-    #[serde(rename = "targeted-diagnostics-recommended")]
-    TargetedDiagnosticsRecommended,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -577,14 +604,14 @@ pub struct MtbStudyEnrollmentRecommendation {
     pub issued_on: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub level_of_evidence: Option<CodingLevelOfEvidenceGrading>,
+    pub level_of_evidence: Option<LevelOfEvidence>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub medication: Option<Vec<CodingAtcUnregisteredMedication>>,
+    pub medication: Option<Vec<AtcUnregisteredMedicationCoding>>,
 
     pub patient: Reference,
 
-    pub priority: CodingRecommendationPriority,
+    pub priority: RecommendationPriorityCoding,
 
     pub reason: Reference,
 
@@ -637,16 +664,16 @@ pub struct ClaimResponse {
 
     pub patient: Reference,
 
-    pub status: CodingClaimResponseStatus,
+    pub status: ClaimResponseStatusCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status_reason: Option<CodingClaimResponseStatusReason>,
+    pub status_reason: Option<ClaimResponseStatusReasonCoding>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingClaimResponseStatus {
-    pub code: CodingClaimResponseStatusCode,
+pub struct ClaimResponseStatusCoding {
+    pub code: ClaimResponseStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -661,7 +688,7 @@ pub struct CodingClaimResponseStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum CodingClaimResponseStatusCode {
+pub enum ClaimResponseStatusCodingCode {
     Accepted,
 
     Rejected,
@@ -671,8 +698,8 @@ pub enum CodingClaimResponseStatusCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingClaimResponseStatusReason {
-    pub code: CodingClaimResponseStatusReasonCode,
+pub struct ClaimResponseStatusReasonCoding {
+    pub code: ClaimResponseStatusReasonCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -687,7 +714,7 @@ pub struct CodingClaimResponseStatusReason {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingClaimResponseStatusReasonCode {
+pub enum ClaimResponseStatusReasonCodingCode {
     #[serde(rename = "approval-revocation")]
     ApprovalRevocation,
 
@@ -724,16 +751,16 @@ pub struct Claim {
     pub recommendation: Reference,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub requested_medication: Option<Vec<CodingAtcUnregisteredMedication>>,
+    pub requested_medication: Option<Vec<AtcUnregisteredMedicationCoding>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub stage: Option<CodingClaimStage>,
+    pub stage: Option<ClaimStageCoding>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingClaimStage {
-    pub code: StageCode,
+pub struct ClaimStageCoding {
+    pub code: ClaimStageCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -748,7 +775,7 @@ pub struct CodingClaimStage {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum StageCode {
+pub enum ClaimStageCodingCode {
     #[serde(rename = "follow-up-claim")]
     FollowUpClaim,
 
@@ -773,7 +800,7 @@ pub struct MtbDiagnosis {
     pub grading: Option<Grading>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub guideline_treatment_status: Option<CodingMtbDiagnosisGuidelineTreatmentStatus>,
+    pub guideline_treatment_status: Option<MtbDiagnosisGuidelineTreatmentStatusCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub histology: Option<Vec<Reference>>,
@@ -788,14 +815,12 @@ pub struct MtbDiagnosis {
 
     pub patient: Reference,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub recorded_on: Option<String>,
+    pub recorded_on: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub staging: Option<Staging>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub topography: Option<Coding>,
+    pub topography: Coding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -814,8 +839,8 @@ pub struct TumorGrading {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbDiagnosisGuidelineTreatmentStatus {
-    pub code: GuidelineTreatmentStatusCode,
+pub struct MtbDiagnosisGuidelineTreatmentStatusCoding {
+    pub code: MtbDiagnosisGuidelineTreatmentStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -830,7 +855,7 @@ pub struct CodingMtbDiagnosisGuidelineTreatmentStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum GuidelineTreatmentStatusCode {
+pub enum MtbDiagnosisGuidelineTreatmentStatusCodingCode {
     Exhausted,
 
     Impossible,
@@ -855,13 +880,13 @@ pub struct Type {
 pub struct History {
     pub date: String,
 
-    pub value: CodingMtbDiagnosis,
+    pub value: MtbDiagnosisCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbDiagnosis {
-    pub code: CodingMtbDiagnosisCode,
+pub struct MtbDiagnosisCoding {
+    pub code: ValueCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -876,7 +901,7 @@ pub struct CodingMtbDiagnosis {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum CodingMtbDiagnosisCode {
+pub enum ValueCode {
     Main,
 
     Metachronous,
@@ -896,7 +921,7 @@ pub struct Staging {
 pub struct TumorStaging {
     pub date: String,
 
-    pub method: CodingTumorStagingMethod,
+    pub method: TumorStagingMethodCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub other_classifications: Option<Vec<Coding>>,
@@ -907,8 +932,8 @@ pub struct TumorStaging {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTumorStagingMethod {
-    pub code: CodingTumorStagingMethodCode,
+pub struct TumorStagingMethodCoding {
+    pub code: TumorStagingMethodCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -923,7 +948,7 @@ pub struct CodingTumorStagingMethod {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum CodingTumorStagingMethodCode {
+pub enum TumorStagingMethodCodingCode {
     Clinical,
 
     Pathologic,
@@ -968,13 +993,18 @@ pub struct FollowUp {
     pub date: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub patient_status: Option<CodingFollowUpPatientStatus>,
+    pub last_contact_date: Option<String>,
+
+    pub patient: Reference,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub patient_status: Option<FollowUpPatientStatusCoding>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingFollowUpPatientStatus {
-    pub code: PatientStatusCode,
+pub struct FollowUpPatientStatusCoding {
+    pub code: FollowUpPatientStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -989,7 +1019,7 @@ pub struct CodingFollowUpPatientStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum PatientStatusCode {
+pub enum FollowUpPatientStatusCodingCode {
     #[serde(rename = "lost-to-fu")]
     LostToFu,
 }
@@ -1001,12 +1031,12 @@ pub struct OncoProcedure {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub based_on: Option<Reference>,
 
-    pub code: CodingOncoProcedure,
+    pub code: OncoProcedureCoding,
 
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub intent: Option<CodingMtbTherapyIntent>,
+    pub intent: Option<MtbTherapyIntentCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<Vec<String>>,
@@ -1021,10 +1051,10 @@ pub struct OncoProcedure {
 
     pub recorded_on: String,
 
-    pub status: CodingTherapyStatus,
+    pub status: TherapyStatusCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status_reason: Option<CodingMtbTherapyStatusReason>,
+    pub status_reason: Option<MtbTherapyStatusReasonCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub therapy_line: Option<i64>,
@@ -1032,8 +1062,8 @@ pub struct OncoProcedure {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingOncoProcedure {
-    pub code: CodingOncoProcedureCode,
+pub struct OncoProcedureCoding {
+    pub code: OncoProcedureCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1048,7 +1078,7 @@ pub struct CodingOncoProcedure {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingOncoProcedureCode {
+pub enum OncoProcedureCodingCode {
     #[serde(rename = "nuclear-medicine")]
     NuclearMedicine,
 
@@ -1060,8 +1090,8 @@ pub enum CodingOncoProcedureCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbTherapyIntent {
-    pub code: IntentCode,
+pub struct MtbTherapyIntentCoding {
+    pub code: MtbTherapyIntentCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1075,7 +1105,7 @@ pub struct CodingMtbTherapyIntent {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum IntentCode {
+pub enum MtbTherapyIntentCodingCode {
     K,
 
     P,
@@ -1087,8 +1117,8 @@ pub enum IntentCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTherapyStatus {
-    pub code: CodingTherapyStatusCode,
+pub struct TherapyStatusCoding {
+    pub code: TherapyStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1103,7 +1133,7 @@ pub struct CodingTherapyStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingTherapyStatusCode {
+pub enum TherapyStatusCodingCode {
     Completed,
 
     #[serde(rename = "not-done")]
@@ -1119,8 +1149,8 @@ pub enum CodingTherapyStatusCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbTherapyStatusReason {
-    pub code: CodingMtbTherapyStatusReasonCode,
+pub struct MtbTherapyStatusReasonCoding {
+    pub code: MtbTherapyStatusReasonCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1135,7 +1165,7 @@ pub struct CodingMtbTherapyStatusReason {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingMtbTherapyStatusReasonCode {
+pub enum MtbTherapyStatusReasonCodingCode {
     #[serde(rename = "best-supportive-care")]
     BestSupportiveCare,
 
@@ -1198,15 +1228,18 @@ pub struct MtbSystemicTherapy {
     pub based_on: Option<Reference>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub category: Option<CodingMtbSystemicTherapyCategory>,
+    pub category: Option<MtbSystemicTherapyCategoryCoding>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dosage: Option<MtbSystemicTherapyDosageDensityCoding>,
 
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub intent: Option<CodingMtbTherapyIntent>,
+    pub intent: Option<MtbTherapyIntentCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub medication: Option<Vec<CodingAtcUnregisteredMedication>>,
+    pub medication: Option<Vec<AtcUnregisteredMedicationCoding>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<Vec<String>>,
@@ -1220,14 +1253,14 @@ pub struct MtbSystemicTherapy {
     pub reason: Option<Reference>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub recommendation_fulfillment_status: Option<CodingMtbSystemicTherapyRecommendationFulfillmentStatus>,
+    pub recommendation_fulfillment_status: Option<MtbSystemicTherapyRecommendationFulfillmentStatusCoding>,
 
     pub recorded_on: String,
 
-    pub status: CodingTherapyStatus,
+    pub status: TherapyStatusCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status_reason: Option<CodingMtbTherapyStatusReason>,
+    pub status_reason: Option<MtbTherapyStatusReasonCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub therapy_line: Option<i64>,
@@ -1235,8 +1268,8 @@ pub struct MtbSystemicTherapy {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbSystemicTherapyCategory {
-    pub code: CodingMtbSystemicTherapyCategoryCode,
+pub struct MtbSystemicTherapyCategoryCoding {
+    pub code: MtbSystemicTherapyCategoryCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1250,7 +1283,7 @@ pub struct CodingMtbSystemicTherapyCategory {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingMtbSystemicTherapyCategoryCode {
+pub enum MtbSystemicTherapyCategoryCodingCode {
     A,
 
     I,
@@ -1264,8 +1297,33 @@ pub enum CodingMtbSystemicTherapyCategoryCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMtbSystemicTherapyRecommendationFulfillmentStatus {
-    pub code: RecommendationFulfillmentStatusCode,
+pub struct MtbSystemicTherapyDosageDensityCoding {
+    pub code: MtbSystemicTherapyDosageDensityCodingCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub enum MtbSystemicTherapyDosageDensityCodingCode {
+    #[serde(rename = "over-50%")]
+    Over50,
+
+    #[serde(rename = "under-50%")]
+    Under50,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MtbSystemicTherapyRecommendationFulfillmentStatusCoding {
+    pub code: MtbSystemicTherapyRecommendationFulfillmentStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1280,7 +1338,7 @@ pub struct CodingMtbSystemicTherapyRecommendationFulfillmentStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum RecommendationFulfillmentStatusCode {
+pub enum MtbSystemicTherapyRecommendationFulfillmentStatusCodingCode {
     Complete,
 
     Partial,
@@ -1316,7 +1374,7 @@ pub struct HistologyReportResults {
 pub struct TumorCellContent {
     pub id: String,
 
-    pub method: CodingTumorCellContentMethod,
+    pub method: TumorCellContentMethodCoding,
 
     pub patient: Reference,
 
@@ -1327,8 +1385,8 @@ pub struct TumorCellContent {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTumorCellContentMethod {
-    pub code: CodingTumorCellContentMethodCode,
+pub struct TumorCellContentMethodCoding {
+    pub code: TumorCellContentMethodCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1343,7 +1401,7 @@ pub struct CodingTumorCellContentMethod {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum CodingTumorCellContentMethodCode {
+pub enum TumorCellContentMethodCodingCode {
     Bioinformatic,
 
     Histologic,
@@ -1355,7 +1413,7 @@ pub struct TumorMorphology {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub notes: Option<String>,
+    pub note: Option<String>,
 
     pub patient: Reference,
 
@@ -1397,7 +1455,7 @@ pub struct IhcReportResults {
 #[serde(rename_all = "camelCase")]
 pub struct MsiMmr {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub ic_score: Option<CodingProteinExpressionIcScore>,
+    pub ic_score: Option<ProteinExpressionIcScoreCoding>,
 
     pub id: String,
 
@@ -1406,18 +1464,18 @@ pub struct MsiMmr {
     pub protein: Coding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub tc_score: Option<CodingProteinExpressionTcScore>,
+    pub tc_score: Option<ProteinExpressionTcScoreCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tps_score: Option<i64>,
 
-    pub value: CodingProteinExpressionResult,
+    pub value: ProteinExpressionResultCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingProteinExpressionIcScore {
-    pub code: IcScoreCode,
+pub struct ProteinExpressionIcScoreCoding {
+    pub code: ProteinExpressionIcScoreCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1431,24 +1489,24 @@ pub struct CodingProteinExpressionIcScore {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum IcScoreCode {
+pub enum ProteinExpressionIcScoreCodingCode {
     #[serde(rename = "0")]
-    The0,
+    Code0,
 
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingProteinExpressionTcScore {
-    pub code: TcScoreCode,
+pub struct ProteinExpressionTcScoreCoding {
+    pub code: ProteinExpressionTcScoreCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1462,33 +1520,33 @@ pub struct CodingProteinExpressionTcScore {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum TcScoreCode {
+pub enum ProteinExpressionTcScoreCodingCode {
     #[serde(rename = "0")]
-    The0,
+    Code0,
 
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 
     #[serde(rename = "4")]
-    The4,
+    Code4,
 
     #[serde(rename = "5")]
-    The5,
+    Code5,
 
     #[serde(rename = "6")]
-    The6,
+    Code6,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingProteinExpressionResult {
-    pub code: ProteinExpressionResultCode,
+pub struct ProteinExpressionResultCoding {
+    pub code: ProteinExpressionResultCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1503,20 +1561,20 @@ pub struct CodingProteinExpressionResult {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum ProteinExpressionResultCode {
+pub enum ProteinExpressionResultCodingCode {
     Exp,
 
     #[serde(rename = "not-exp")]
     NotExp,
 
     #[serde(rename = "1+")]
-    The1,
+    Code1Plus,
 
     #[serde(rename = "2+")]
-    The2,
+    Code2Plus,
 
     #[serde(rename = "3+")]
-    The3,
+    Code3Plus,
 
     Unknown,
 }
@@ -1526,7 +1584,7 @@ pub enum ProteinExpressionResultCode {
 #[serde(rename_all = "camelCase")]
 pub struct ProteinExpression {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub ic_score: Option<CodingProteinExpressionIcScore>,
+    pub ic_score: Option<ProteinExpressionIcScoreCoding>,
 
     pub id: String,
 
@@ -1535,30 +1593,102 @@ pub struct ProteinExpression {
     pub protein: Coding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub tc_score: Option<CodingProteinExpressionTcScore>,
+    pub tc_score: Option<ProteinExpressionTcScoreCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tps_score: Option<i64>,
 
-    pub value: CodingProteinExpressionResult,
+    pub value: ProteinExpressionResultCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
-pub struct SomaticNgsReportMetadata {
+pub struct MvhMetadata {
+    pub model_project_consent: ModelProjectConsent,
+
+    #[serde(rename = "type")]
+    pub mvh_metadata_type: MvhSubmissionType,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub research_consents: Option<Vec<HashMap<String, Option<serde_json::Value>>>>,
+
+    #[serde(rename = "transferTAN")]
+    pub transfer_tan: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ModelProjectConsent {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub date: Option<String>,
+
+    pub provisions: Vec<Provision>,
+
+    pub version: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Provision {
+    pub date: String,
+
+    #[serde(rename = "type")]
+    pub provision_type: ConsentProvision,
+
+    pub purpose: ModelProjectConsentPurpose,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "snake_case")]
+pub enum ConsentProvision {
+    Deny,
+
+    Permit,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "kebab-case")]
+pub enum ModelProjectConsentPurpose {
+    #[serde(rename = "case-identification")]
+    CaseIdentification,
+
+    Reidentification,
+
+    Sequencing,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "snake_case")]
+pub enum MvhSubmissionType {
+    Addition,
+
+    Correction,
+
+    Followup,
+
+    Initial,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "camelCase")]
+pub struct SomaticNgsReport {
     pub id: String,
 
     pub issued_on: String,
 
-    pub metadata: Vec<Metadata>,
+    pub metadata: Vec<NgsReportMetadata>,
 
     pub patient: Reference,
 
     pub results: NgsReportResults,
 
     #[serde(rename = "type")]
-    pub somatic_ngs_report_metadata_type: CodingNgsReport,
+    pub somatic_ngs_report_type: NgsReportCoding,
 
     pub specimen: Reference,
 }
@@ -1566,7 +1696,7 @@ pub struct SomaticNgsReportMetadata {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
-pub struct Metadata {
+pub struct NgsReportMetadata {
     pub kit_manufacturer: String,
 
     pub kit_type: String,
@@ -1583,20 +1713,25 @@ pub struct Metadata {
 #[serde(rename_all = "camelCase")]
 pub struct NgsReportResults {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub brcaness: Option<BrcAness>,
+    pub brcaness: Option<Brcaness>,
 
-    pub copy_number_variants: Vec<Cnv>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub copy_number_variants: Option<Vec<Cnv>>,
 
-    pub dna_fusions: Vec<DnaFusion>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dna_fusions: Option<Vec<DnaFusion>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hrd_score: Option<HrdScore>,
 
-    pub rna_fusions: Vec<RnaFusion>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rna_fusions: Option<Vec<RnaFusion>>,
 
-    pub rna_seqs: Vec<RnaSeq>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rna_seqs: Option<Vec<RnaSeq>>,
 
-    pub simple_variants: Vec<Snv>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub simple_variants: Option<Vec<Snv>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tmb: Option<Tmb>,
@@ -1608,7 +1743,7 @@ pub struct NgsReportResults {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
-pub struct BrcAness {
+pub struct Brcaness {
     pub confidence_range: ConfidenceRange,
 
     pub id: String,
@@ -1641,7 +1776,7 @@ pub struct Cnv {
     pub cn_b: Option<f64>,
 
     #[serde(rename = "type")]
-    pub cnv_type: CodingCnv,
+    pub cnv_type: CnvCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_number_neutral_lo_h: Option<Vec<Coding>>,
@@ -1655,7 +1790,7 @@ pub struct Cnv {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub localization: Option<Vec<CodingBaseVariantLocalization>>,
+    pub localization: Option<Vec<BaseVariantLocalizationCoding>>,
 
     pub patient: Reference,
 
@@ -1732,8 +1867,8 @@ pub enum Chromosome {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingCnv {
-    pub code: CodingCnvCode,
+pub struct CnvCoding {
+    pub code: CnvCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1748,7 +1883,7 @@ pub struct CodingCnv {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingCnvCode {
+pub enum CnvCodingCode {
     #[serde(rename = "high-level-gain")]
     HighLevelGain,
 
@@ -1779,22 +1914,22 @@ pub struct VariantExternalId {
 #[serde(deny_unknown_fields)]
 pub enum ExternalIdSystem {
     #[serde(rename = "https://cancer.sanger.ac.uk/cosmic")]
-    HttpsCancerSangerAcUkCosmic,
+    CancerSangerAcUkCosmic,
 
     #[serde(rename = "https://www.ensembl.org")]
-    HttpsWwwEnsemblOrg,
+    EnsemblOrg,
 
     #[serde(rename = "https://www.ncbi.nlm.nih.gov/entrez")]
-    HttpsWwwNcbiNlmNihGovEntrez,
+    NcbiNlmNihGovEntrez,
 
     #[serde(rename = "https://www.ncbi.nlm.nih.gov/snp")]
-    HttpsWwwNcbiNlmNihGovSnp,
+    NcbiNlmNihGovSnp,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingBaseVariantLocalization {
-    pub code: CodingBaseVariantLocalizationCode,
+pub struct BaseVariantLocalizationCoding {
+    pub code: BaseVariantLocalizationCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1809,7 +1944,7 @@ pub struct CodingBaseVariantLocalization {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingBaseVariantLocalizationCode {
+pub enum BaseVariantLocalizationCodingCode {
     #[serde(rename = "coding-region")]
     CodingRegion,
 
@@ -1849,7 +1984,7 @@ pub struct DnaFusion {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub localization: Option<Vec<CodingBaseVariantLocalization>>,
+    pub localization: Option<Vec<BaseVariantLocalizationCoding>>,
 
     pub patient: Reference,
 
@@ -1884,7 +2019,7 @@ pub struct HrdScore {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub interpretation: Option<CodingHrdScoreInterpretation>,
+    pub interpretation: Option<HrdScoreInterpretationCoding>,
 
     pub patient: Reference,
 
@@ -1905,8 +2040,8 @@ pub struct Components {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingHrdScoreInterpretation {
-    pub code: CodingHrdScoreInterpretationCode,
+pub struct HrdScoreInterpretationCoding {
+    pub code: InterpretationCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -1921,7 +2056,7 @@ pub struct CodingHrdScoreInterpretation {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum CodingHrdScoreInterpretationCode {
+pub enum InterpretationCodingCode {
     High,
 
     Intermediate,
@@ -1948,7 +2083,7 @@ pub struct RnaFusion {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub localization: Option<Vec<CodingBaseVariantLocalization>>,
+    pub localization: Option<Vec<BaseVariantLocalizationCoding>>,
 
     pub patient: Reference,
 
@@ -1992,10 +2127,10 @@ pub struct TranscriptId {
 #[serde(deny_unknown_fields)]
 pub enum TranscriptIdSystem {
     #[serde(rename = "https://www.ensembl.org")]
-    HttpsWwwEnsemblOrg,
+    EnsemblOrg,
 
     #[serde(rename = "https://www.ncbi.nlm.nih.gov/refseq")]
-    HttpsWwwNcbiNlmNihGovRefseq,
+    NcbiNlmNihGovRefseq,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2032,7 +2167,7 @@ pub struct RnaSeq {
     pub library_size: Option<i64>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub localization: Option<Vec<CodingBaseVariantLocalization>>,
+    pub localization: Option<Vec<BaseVariantLocalizationCoding>>,
 
     pub patient: Reference,
 
@@ -2059,8 +2194,7 @@ pub struct Snv {
 
     pub chromosome: Chromosome,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub dna_change: Option<Coding>,
+    pub dna_change: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub exon_id: Option<String>,
@@ -2068,23 +2202,22 @@ pub struct Snv {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub external_ids: Option<Vec<VariantExternalId>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gene: Option<Coding>,
+    pub gene: Coding,
 
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub interpretation: Option<CodingClinVar>,
+    pub interpretation: Option<ClinVarCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub localization: Option<Vec<CodingBaseVariantLocalization>>,
+    pub localization: Option<Vec<BaseVariantLocalizationCoding>>,
 
     pub patient: Reference,
 
     pub position: Position,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub protein_change: Option<Coding>,
+    pub protein_change: Option<String>,
 
     pub read_depth: i64,
 
@@ -2095,8 +2228,8 @@ pub struct Snv {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingClinVar {
-    pub code: CodingClinVarCode,
+pub struct ClinVarCoding {
+    pub code: ClinVarCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2110,21 +2243,21 @@ pub struct CodingClinVar {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingClinVarCode {
+pub enum ClinVarCodingCode {
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 
     #[serde(rename = "4")]
-    The4,
+    Code4,
 
     #[serde(rename = "5")]
-    The5,
+    Code5,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2142,7 +2275,7 @@ pub struct Tmb {
     pub id: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub interpretation: Option<CodingTmbInterpretation>,
+    pub interpretation: Option<TmbInterpretationCoding>,
 
     pub patient: Reference,
 
@@ -2153,8 +2286,8 @@ pub struct Tmb {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTmbInterpretation {
-    pub code: CodingHrdScoreInterpretationCode,
+pub struct TmbInterpretationCoding {
+    pub code: InterpretationCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2177,8 +2310,8 @@ pub struct TmbResult {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingNgsReport {
-    pub code: CodingNgsReportCode,
+pub struct NgsReportCoding {
+    pub code: NgsReportCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2193,7 +2326,7 @@ pub struct CodingNgsReport {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingNgsReportCode {
+pub enum NgsReportCodingCode {
     Array,
 
     Exome,
@@ -2227,7 +2360,7 @@ pub struct Patient {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub date_of_death: Option<String>,
 
-    pub gender: CodingGender,
+    pub gender: GenderCoding,
 
     pub health_insurance: HealthInsurance,
 
@@ -2237,7 +2370,7 @@ pub struct Patient {
     pub managing_site: Option<Coding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub vital_status: Option<CodingVitalStatus>,
+    pub vital_status: Option<VitalStatusCoding>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2265,8 +2398,8 @@ pub enum Unit {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingGender {
-    pub code: GenderCode,
+pub struct GenderCoding {
+    pub code: GenderCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2281,7 +2414,7 @@ pub struct CodingGender {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum GenderCode {
+pub enum GenderCodingCode {
     Female,
 
     Male,
@@ -2295,7 +2428,7 @@ pub enum GenderCode {
 #[serde(deny_unknown_fields)]
 pub struct HealthInsurance {
     #[serde(rename = "type")]
-    pub health_insurance_type: CodingHealthInsurance,
+    pub health_insurance_type: HealthInsuranceCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reference: Option<Reference>,
@@ -2303,8 +2436,8 @@ pub struct HealthInsurance {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingHealthInsurance {
-    pub code: CodingHealthInsuranceCode,
+pub struct HealthInsuranceCoding {
+    pub code: HealthInsuranceCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2318,7 +2451,7 @@ pub struct CodingHealthInsurance {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingHealthInsuranceCode {
+pub enum HealthInsuranceCodingCode {
     #[serde(rename = "BEI")]
     Bei,
 
@@ -2340,6 +2473,9 @@ pub enum CodingHealthInsuranceCode {
     #[serde(rename = "SEL")]
     Sel,
 
+    #[serde(rename = "SKT")]
+    Skt,
+
     #[serde(rename = "SOZ")]
     Soz,
 
@@ -2349,8 +2485,8 @@ pub enum CodingHealthInsuranceCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingVitalStatus {
-    pub code: VitalStatusCode,
+pub struct VitalStatusCoding {
+    pub code: VitalStatusCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2365,7 +2501,7 @@ pub struct CodingVitalStatus {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
-pub enum VitalStatusCode {
+pub enum VitalStatusCodingCode {
     Alive,
 
     Deceased,
@@ -2381,13 +2517,13 @@ pub struct PerformanceStatus {
 
     pub patient: Reference,
 
-    pub value: CodingEcog,
+    pub value: EcogCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingEcog {
-    pub code: CodingEcogCode,
+pub struct EcogCoding {
+    pub code: EcogCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2401,24 +2537,24 @@ pub struct CodingEcog {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingEcogCode {
+pub enum EcogCodingCode {
     #[serde(rename = "0")]
-    The0,
+    Code0,
 
     #[serde(rename = "1")]
-    The1,
+    Code1,
 
     #[serde(rename = "2")]
-    The2,
+    Code2,
 
     #[serde(rename = "3")]
-    The3,
+    Code3,
 
     #[serde(rename = "4")]
-    The4,
+    Code4,
 
     #[serde(rename = "5")]
-    The5,
+    Code5,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2435,7 +2571,7 @@ pub struct PriorDiagnosticReport {
     pub performer: Option<Reference>,
 
     #[serde(rename = "type")]
-    pub prior_diagnostic_report_type: CodingMolecularDiagnosticReport,
+    pub prior_diagnostic_report_type: MolecularDiagnosticReportCoding,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub results: Option<Vec<String>>,
@@ -2445,8 +2581,8 @@ pub struct PriorDiagnosticReport {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingMolecularDiagnosticReport {
-    pub code: CodingMolecularDiagnosticReportCode,
+pub struct MolecularDiagnosticReportCoding {
+    pub code: MolecularDiagnosticReportCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2461,7 +2597,7 @@ pub struct CodingMolecularDiagnosticReport {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingMolecularDiagnosticReportCode {
+pub enum MolecularDiagnosticReportCodingCode {
     Array,
 
     Exome,
@@ -2501,19 +2637,19 @@ pub struct Response {
 
     pub id: String,
 
-    pub method: CodingResponseMethod,
+    pub method: ResponseMethodCoding,
 
     pub patient: Reference,
 
     pub therapy: Reference,
 
-    pub value: CodingRecist,
+    pub value: RecistCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingResponseMethod {
-    pub code: CodingResponseMethodCode,
+pub struct ResponseMethodCoding {
+    pub code: ResponseMethodCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2527,7 +2663,7 @@ pub struct CodingResponseMethod {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingResponseMethodCode {
+pub enum ResponseMethodCodingCode {
     #[serde(rename = "RANO")]
     Rano,
 
@@ -2537,8 +2673,8 @@ pub enum CodingResponseMethodCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingRecist {
-    pub code: CodingRecistCode,
+pub struct RecistCoding {
+    pub code: RecistCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2552,7 +2688,7 @@ pub struct CodingRecist {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub enum CodingRecistCode {
+pub enum RecistCodingCode {
     #[serde(rename = "CR")]
     Cr,
 
@@ -2585,7 +2721,7 @@ pub struct TumorSpecimen {
     pub patient: Reference,
 
     #[serde(rename = "type")]
-    pub tumor_specimen_type: CodingTumorSpecimen,
+    pub tumor_specimen_type: TumorSpecimenCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2594,15 +2730,15 @@ pub struct Collection {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub date: Option<String>,
 
-    pub localization: CodingTumorSpecimenCollectionLocalization,
+    pub localization: TumorSpecimenCollectionLocalizationCoding,
 
-    pub method: CodingTumorSpecimenCollectionMethod,
+    pub method: TumorSpecimenCollectionMethodCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTumorSpecimenCollectionLocalization {
-    pub code: CodingTumorSpecimenCollectionLocalizationCode,
+pub struct TumorSpecimenCollectionLocalizationCoding {
+    pub code: TumorSpecimenCollectionLocalizationCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2617,7 +2753,7 @@ pub struct CodingTumorSpecimenCollectionLocalization {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingTumorSpecimenCollectionLocalizationCode {
+pub enum TumorSpecimenCollectionLocalizationCodingCode {
     #[serde(rename = "cellfree-dna")]
     CellfreeDna,
 
@@ -2637,8 +2773,8 @@ pub enum CodingTumorSpecimenCollectionLocalizationCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTumorSpecimenCollectionMethod {
-    pub code: CodingTumorSpecimenCollectionMethodCode,
+pub struct TumorSpecimenCollectionMethodCoding {
+    pub code: TumorSpecimenCollectionMethodCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2653,7 +2789,7 @@ pub struct CodingTumorSpecimenCollectionMethod {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingTumorSpecimenCollectionMethodCode {
+pub enum TumorSpecimenCollectionMethodCodingCode {
     Biopsy,
 
     Cytology,
@@ -2668,8 +2804,8 @@ pub enum CodingTumorSpecimenCollectionMethodCode {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CodingTumorSpecimen {
-    pub code: CodingTumorSpecimenCode,
+pub struct TumorSpecimenCoding {
+    pub code: TumorSpecimenCodingCode,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display: Option<String>,
@@ -2684,7 +2820,7 @@ pub struct CodingTumorSpecimen {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
-pub enum CodingTumorSpecimenCode {
+pub enum TumorSpecimenCodingCode {
     #[serde(rename = "cryo-frozen")]
     CryoFrozen,
 

@@ -72,16 +72,16 @@ impl Mtb {
                 age: None,
                 birth_date: String::new(),
                 date_of_death: None,
-                gender: CodingGender {
-                    code: GenderCode::Female,
+                gender: GenderCoding {
+                    code: GenderCodingCode::Female,
                     display: None,
                     system: None,
                     version: None,
                 },
                 id: patient_id.to_string(),
                 health_insurance: HealthInsurance {
-                    health_insurance_type: CodingHealthInsurance {
-                        code: CodingHealthInsuranceCode::Bei,
+                    health_insurance_type: HealthInsuranceCoding {
+                        code: HealthInsuranceCodingCode::Bei,
                         display: None,
                         system: None,
                         version: None,
@@ -97,6 +97,7 @@ impl Mtb {
             follow_ups: None,
             prior_diagnostic_reports: None,
             systemic_therapies: None,
+            metadata: None,
         }
     }
 }
