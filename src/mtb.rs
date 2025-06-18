@@ -664,10 +664,11 @@ pub struct ClaimResponse {
 
     pub patient: Reference,
 
-    pub status: ClaimResponseStatusCoding,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ClaimResponseStatusCoding>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status_reason: Option<ClaimResponseStatusReasonCoding>,
+    pub status_reason: Option<Vec<ClaimResponseStatusReasonCoding>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -1426,13 +1427,9 @@ pub struct TumorMorphology {
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct IhcReport {
-    pub block_ids: Vec<String>,
-
     pub id: String,
 
     pub issued_on: String,
-
-    pub journal_id: String,
 
     pub patient: Reference,
 
