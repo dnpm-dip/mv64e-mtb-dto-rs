@@ -19,6 +19,9 @@ pub struct Mtb {
     pub episodes_of_care: Vec<MtbEpisodeOfCare>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub family_member_histories: Option<Vec<FamilyMemberHistory>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub follow_ups: Option<Vec<FollowUp>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -985,6 +988,41 @@ pub struct PeriodDate {
     pub end: Option<String>,
 
     pub start: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FamilyMemberHistory {
+    pub id: String,
+
+    pub patient: Reference,
+
+    pub relationship: FamilyMemberHistoryRelationshipTypeCoding,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FamilyMemberHistoryRelationshipTypeCoding {
+    pub code: FamilyMemberHistoryRelationshipTypeCodingCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub enum FamilyMemberHistoryRelationshipTypeCodingCode {
+    #[serde(rename = "EXT")]
+    Ext,
+
+    #[serde(rename = "FAMMEMB")]
+    Fammemb,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
