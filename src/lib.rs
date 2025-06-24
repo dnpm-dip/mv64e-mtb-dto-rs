@@ -94,6 +94,7 @@ impl Mtb {
             responses: None,
             specimens: None,
             guideline_procedures: None,
+            family_member_histories: None,
             follow_ups: None,
             prior_diagnostic_reports: None,
             systemic_therapies: None,
