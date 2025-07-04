@@ -181,7 +181,7 @@ pub struct HistologyReevaluationRequest {
 #[serde(rename_all = "camelCase")]
 pub struct MtbMedicationRecommendation {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub category: Option<MtbMedicationRecommendationCategoryCoding>,
+    pub category: Option<Vec<MtbMedicationRecommendationCategoryCoding>>,
 
     pub id: String,
 
@@ -1898,6 +1898,9 @@ pub enum Chromosome {
 
     #[serde(rename = "chrY")]
     ChrY,
+
+    #[serde(rename = "chrMT")]
+    ChrMt,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
