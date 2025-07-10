@@ -40,6 +40,9 @@ pub struct Mtb {
     pub metadata: Option<MvhMetadata>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub msi_findings: Option<Vec<Msi>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ngs_reports: Option<Vec<SomaticNgsReport>>,
 
     pub patient: Patient,
@@ -1706,6 +1709,86 @@ pub enum MvhSubmissionType {
     Followup,
 
     Initial,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Msi {
+    pub id: String,
+
+    pub interpretation: MsiInterpretationCoding,
+
+    pub method: MsiMethodCoding,
+
+    pub patient: Reference,
+
+    pub specimen: Reference,
+
+    pub value: f64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MsiInterpretationCoding {
+    pub code: MsiInterpretationCodingCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "kebab-case")]
+pub enum MsiInterpretationCodingCode {
+    #[serde(rename = "mmr-deficient")]
+    MmrDeficient,
+
+    #[serde(rename = "mmr-proficient")]
+    MmrProficient,
+
+    #[serde(rename = "msi-high")]
+    MsiHigh,
+
+    #[serde(rename = "msi-low")]
+    MsiLow,
+
+    Stable,
+
+    Unknown,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MsiMethodCoding {
+    pub code: MsiMethodCodingCode,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub system: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub enum MsiMethodCodingCode {
+    #[serde(rename = "bioinformatic")]
+    Bioinformatic,
+
+    #[serde(rename = "IHC")]
+    Ihc,
+
+    #[serde(rename = "PCR")]
+    Pcr,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -99,6 +99,7 @@ impl Mtb {
             prior_diagnostic_reports: None,
             systemic_therapies: None,
             metadata: None,
+            msi_findings: None,
         }
     }
 }
