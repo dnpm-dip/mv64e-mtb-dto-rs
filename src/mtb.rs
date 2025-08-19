@@ -1709,6 +1709,8 @@ pub enum MvhSubmissionType {
     Followup,
 
     Initial,
+
+    Test,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -2471,7 +2473,8 @@ pub enum NgsReportCodingCode {
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct Patient {
-    pub address: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<Address>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub age: Option<Age>,
