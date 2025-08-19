@@ -66,9 +66,7 @@ impl Mtb {
             ngs_reports: None,
             ihc_reports: None,
             patient: Patient {
-                address: Address {
-                    municipality_code: String::new(),
-                },
+                address: None,
                 age: None,
                 birth_date: String::new(),
                 date_of_death: None,
@@ -81,7 +79,7 @@ impl Mtb {
                 id: patient_id.to_string(),
                 health_insurance: HealthInsurance {
                     health_insurance_type: HealthInsuranceCoding {
-                        code: HealthInsuranceCodingCode::Bei,
+                        code: HealthInsuranceCodingCode::Unk,
                         display: None,
                         system: None,
                         version: None,
