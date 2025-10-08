@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -1295,7 +1295,8 @@ pub struct MtbSystemicTherapy {
     pub reason: Option<Reference>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub recommendation_fulfillment_status: Option<MtbSystemicTherapyRecommendationFulfillmentStatusCoding>,
+    pub recommendation_fulfillment_status:
+        Option<MtbSystemicTherapyRecommendationFulfillmentStatusCoding>,
 
     pub recorded_on: String,
 
@@ -1506,6 +1507,9 @@ pub struct MsiMmr {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tps_score: Option<i64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cps_score: Option<i64>,
 
     pub value: ProteinExpressionResultCoding,
 }
