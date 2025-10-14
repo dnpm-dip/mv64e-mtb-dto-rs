@@ -1484,34 +1484,9 @@ pub struct IhcReport {
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct IhcReportResults {
-    pub msi_mmr: Vec<MsiMmr>,
+    pub msi_mmr: Vec<ProteinExpression>,
 
     pub protein_expression: Vec<ProteinExpression>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-#[serde(rename_all = "camelCase")]
-pub struct MsiMmr {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ic_score: Option<ProteinExpressionIcScoreCoding>,
-
-    pub id: String,
-
-    pub patient: Reference,
-
-    pub protein: Coding,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tc_score: Option<ProteinExpressionTcScoreCoding>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tps_score: Option<i64>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub cps_score: Option<i64>,
-
-    pub value: ProteinExpressionResultCoding,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -1639,6 +1614,9 @@ pub struct ProteinExpression {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tps_score: Option<i64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cps_score: Option<i64>,
 
     pub value: ProteinExpressionResultCoding,
 }
