@@ -113,4 +113,11 @@ mod tests {
         let mtbfile = Mtb::from_str(MTB_JSON);
         assert!(mtbfile.is_ok())
     }
+
+    #[test]
+    fn should_keep_timezone() {
+        let mtbfile = Mtb::from_str(MTB_JSON).unwrap();
+        let actual = serde_json::to_string(&mtbfile).unwrap();
+        assert!(actual.contains(r#""birthDate":"1985-05-19""#));
+    }
 }
