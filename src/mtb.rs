@@ -1633,8 +1633,34 @@ pub struct MvhMetadata {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub research_consents: Option<Vec<HashMap<String, Option<serde_json::Value>>>>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason_research_consent_missing: Option<ResearchConsentReasonMissing>,
+
     #[serde(rename = "transferTAN")]
     pub transfer_tan: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "kebab-case")]
+pub enum ResearchConsentReasonMissing {
+    #[serde(rename = "consent-not-returned")]
+    ConsentNotReturned,
+
+    #[serde(rename = "organizational-issues")]
+    OrganizationalIssues,
+
+    #[serde(rename = "other-patient-reason")]
+    OtherPatientReason,
+
+    #[serde(rename = "patient-inability")]
+    PatientInability,
+
+    #[serde(rename = "patient-refusal")]
+    PatientRefusal,
+
+    #[serde(rename = "technical-issues")]
+    TechnicalIssues,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
