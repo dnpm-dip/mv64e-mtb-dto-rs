@@ -104,6 +104,7 @@ impl Mtb {
 
 #[cfg(test)]
 mod tests {
+    use regex::Regex;
     use super::*;
 
     const MTB_JSON: &str = include_str!("../tests/mv64e-mtb-fake-patient.json");
@@ -116,8 +117,13 @@ mod tests {
 
     #[test]
     fn should_keep_timezone() {
+        let m = Regex::from_str(r#""birthDate":"\d{4}-\d{2}-\d{2}""#)
+            .unwrap()
+            .find(MTB_JSON)
+            .unwrap();
+
         let mtbfile = Mtb::from_str(MTB_JSON).unwrap();
         let actual = serde_json::to_string(&mtbfile).unwrap();
-        assert!(actual.contains(r#""birthDate":"1985-05-19""#));
+        assert!(actual.contains(m.as_str()));
     }
 }
