@@ -148,7 +148,7 @@ pub struct GeneticCounselingRecommendationReasonCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum GeneticCounselingRecommendationReasonCodingCode {
@@ -224,7 +224,7 @@ pub struct MtbMedicationRecommendationCategoryCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MtbMedicationRecommendationCategoryCodingCode {
     #[serde(rename = "CH")]
@@ -273,7 +273,7 @@ pub struct LevelOfEvidenceAddendumCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum LevelOfEvidenceAddendumCodingCode {
     #[serde(rename = "is")]
@@ -302,7 +302,7 @@ pub struct LevelOfEvidenceGradingCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub enum LevelOfEvidenceGradingCodingCode {
@@ -346,7 +346,7 @@ pub struct PublicationReference {
     pub system: PublicationSystem,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum PublicationSystem {
     #[serde(rename = "https://pubmed.ncbi.nlm.nih.gov")]
@@ -370,7 +370,7 @@ pub struct AtcUnregisteredMedicationCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum RequestedMedicationSystem {
@@ -395,7 +395,7 @@ pub struct RecommendationPriorityCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum RecommendationPriorityCodingCode {
     #[serde(rename = "1")]
@@ -453,7 +453,7 @@ pub struct MtbMedicationRecommendationUseTypeCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MtbMedicationRecommendationUseTypeCodingCode {
@@ -486,7 +486,7 @@ pub struct CarePlanNoSequencingPerformedReasonCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum NoSequencingPerformedReasonCode {
@@ -543,7 +543,7 @@ pub struct MtbProcedureRecommendationCategoryCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MtbProcedureRecommendationCategoryCodingCode {
     #[serde(rename = "AS")]
@@ -593,7 +593,7 @@ pub struct MtbCarePlanRecommendationsMissingReasonCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MtbCarePlanRecommendationsMissingReasonCodingCode {
@@ -642,7 +642,7 @@ pub struct StudyReference {
     pub system: StudySystem,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum StudySystem {
     #[serde(rename = "DRKS")]
@@ -692,7 +692,7 @@ pub struct ClaimResponseStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum ClaimResponseStatusCodingCode {
@@ -718,7 +718,7 @@ pub struct ClaimResponseStatusReasonCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum ClaimResponseStatusReasonCodingCode {
@@ -779,7 +779,7 @@ pub struct ClaimStageCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum ClaimStageCodingCode {
@@ -859,7 +859,7 @@ pub struct MtbDiagnosisGuidelineTreatmentStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MtbDiagnosisGuidelineTreatmentStatusCodingCode {
@@ -905,7 +905,7 @@ pub struct MtbDiagnosisCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum ValueCode {
@@ -952,7 +952,7 @@ pub struct TumorStagingMethodCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum TumorStagingMethodCodingCode {
@@ -1018,7 +1018,7 @@ pub struct FamilyMemberHistoryRelationshipTypeCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum FamilyMemberHistoryRelationshipTypeCodingCode {
     #[serde(rename = "EXT")]
@@ -1058,7 +1058,7 @@ pub struct FollowUpPatientStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum FollowUpPatientStatusCodingCode {
@@ -1117,7 +1117,7 @@ pub struct OncoProcedureCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum OncoProcedureCodingCode {
@@ -1145,7 +1145,7 @@ pub struct MtbTherapyIntentCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MtbTherapyIntentCodingCode {
     K,
@@ -1172,7 +1172,7 @@ pub struct TherapyStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum TherapyStatusCodingCode {
@@ -1204,7 +1204,7 @@ pub struct MtbTherapyStatusReasonCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MtbTherapyStatusReasonCodingCode {
@@ -1324,7 +1324,7 @@ pub struct MtbSystemicTherapyCategoryCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MtbSystemicTherapyCategoryCodingCode {
     A,
@@ -1353,7 +1353,7 @@ pub struct MtbSystemicTherapyDosageDensityCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MtbSystemicTherapyDosageDensityCodingCode {
     #[serde(rename = "over-50%")]
@@ -1378,7 +1378,7 @@ pub struct MtbSystemicTherapyRecommendationFulfillmentStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum MtbSystemicTherapyRecommendationFulfillmentStatusCodingCode {
@@ -1441,7 +1441,7 @@ pub struct TumorCellContentMethodCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum TumorCellContentMethodCodingCode {
@@ -1504,7 +1504,7 @@ pub struct ProteinExpressionIcScoreCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum ProteinExpressionIcScoreCodingCode {
     #[serde(rename = "0")]
@@ -1535,7 +1535,7 @@ pub struct ProteinExpressionTcScoreCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum ProteinExpressionTcScoreCodingCode {
     #[serde(rename = "0")]
@@ -1575,7 +1575,7 @@ pub struct ProteinExpressionResultCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum ProteinExpressionResultCodingCode {
@@ -1659,7 +1659,7 @@ pub struct Provision {
     pub purpose: ModelProjectConsentPurpose,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum ConsentProvision {
@@ -1668,7 +1668,7 @@ pub enum ConsentProvision {
     Permit,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum ModelProjectConsentPurpose {
@@ -1680,7 +1680,7 @@ pub enum ModelProjectConsentPurpose {
     Sequencing,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum MvhSubmissionType {
@@ -1726,7 +1726,7 @@ pub struct MsiInterpretationCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MsiInterpretationCodingCode {
@@ -1762,7 +1762,7 @@ pub struct MsiMethodCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum MsiMethodCodingCode {
     #[serde(rename = "bioinformatic")]
@@ -1912,7 +1912,7 @@ pub struct Cnv {
     pub total_copy_number: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub enum Chromosome {
@@ -1985,7 +1985,7 @@ pub struct CnvCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum CnvCodingCode {
@@ -2015,7 +2015,7 @@ pub struct VariantExternalId {
     pub value: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum ExternalIdSystem {
     #[serde(rename = "https://cancer.sanger.ac.uk/cosmic")]
@@ -2046,7 +2046,7 @@ pub struct BaseVariantLocalizationCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum BaseVariantLocalizationCodingCode {
@@ -2158,7 +2158,7 @@ pub struct HrdScoreInterpretationCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum InterpretationCodingCode {
@@ -2210,7 +2210,7 @@ pub struct RnaFusionFusionPartner3Prime {
     pub transcript_id: TranscriptId,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum RnaFusionStrand {
     #[serde(rename = "+")]
@@ -2228,7 +2228,7 @@ pub struct TranscriptId {
     pub value: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum TranscriptIdSystem {
     #[serde(rename = "https://www.ensembl.org")]
@@ -2346,7 +2346,7 @@ pub struct ClinVarCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum ClinVarCodingCode {
     #[serde(rename = "1")]
@@ -2428,7 +2428,7 @@ pub struct NgsReportCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum NgsReportCodingCode {
@@ -2494,7 +2494,7 @@ pub struct Age {
     pub value: f64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum Unit {
     Months,
@@ -2517,7 +2517,7 @@ pub struct GenderCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum GenderCodingCode {
@@ -2555,7 +2555,7 @@ pub struct HealthInsuranceCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum HealthInsuranceCodingCode {
     #[serde(rename = "BEI")]
@@ -2604,7 +2604,7 @@ pub struct VitalStatusCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
 pub enum VitalStatusCodingCode {
@@ -2641,7 +2641,7 @@ pub struct EcogCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum EcogCodingCode {
     #[serde(rename = "0")]
@@ -2700,7 +2700,7 @@ pub struct MolecularDiagnosticReportCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum MolecularDiagnosticReportCodingCode {
@@ -2767,7 +2767,7 @@ pub struct ResponseMethodCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum ResponseMethodCodingCode {
     #[serde(rename = "RANO")]
@@ -2792,7 +2792,7 @@ pub struct RecistCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub enum RecistCodingCode {
     #[serde(rename = "CR")]
@@ -2856,7 +2856,7 @@ pub struct TumorSpecimenCollectionLocalizationCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum TumorSpecimenCollectionLocalizationCodingCode {
@@ -2892,7 +2892,7 @@ pub struct TumorSpecimenCollectionMethodCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum TumorSpecimenCollectionMethodCodingCode {
@@ -2923,7 +2923,7 @@ pub struct TumorSpecimenCoding {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "kebab-case")]
 pub enum TumorSpecimenCodingCode {
