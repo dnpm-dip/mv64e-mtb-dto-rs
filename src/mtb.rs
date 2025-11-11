@@ -1,3 +1,4 @@
+use crate::year_month_format::{serialize_option_year_month_format, serialize_year_month_format};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -2487,9 +2488,13 @@ pub struct Patient {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub age: Option<Age>,
 
+    #[serde(serialize_with = "serialize_year_month_format")]
     pub birth_date: String,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        skip_serializing_if = "Option::is_none",
+        serialize_with = "serialize_option_year_month_format"
+    )]
     pub date_of_death: Option<String>,
 
     pub gender: GenderCoding,
