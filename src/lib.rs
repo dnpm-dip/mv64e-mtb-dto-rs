@@ -11,6 +11,53 @@ pub use crate::mtb::*;
 
 mod mtb;
 
+mod year_month_format {
+    use regex::Regex;
+    use serde::{Serialize, Serializer};
+    use std::str::FromStr;
+
+    pub(crate) fn serialize_year_month_format<S>(
+        date: &String,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let new_format = Regex::from_str(r"^\d{4}-\d{2}$").expect("new format regex");
+        let old_format = Regex::from_str(r"^\d{4}-\d{2}-\d{2}$").expect("old format regex");
+
+        if new_format.is_match(date) {
+            date.serialize(serializer)
+        } else if old_format.is_match(date) {
+            date.as_str()[0..7].to_string().serialize(serializer)
+        } else {
+            Err(serde::ser::Error::custom("Must be a valid date format"))
+        }
+    }
+
+    pub(crate) fn serialize_option_year_month_format<S>(
+        date: &Option<String>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(s) = date {
+            let new_format = Regex::from_str(r"^\d{4}-\d{2}$").unwrap();
+            let old_format = Regex::from_str(r"^\d{4}-\d{2}-\d{2}$").unwrap();
+
+            return if new_format.is_match(s) {
+                Option::<String>::serialize(&Some(s.into()), serializer)
+            } else if old_format.is_match(s) {
+                Option::<String>::serialize(&Some(s.as_str()[0..7].into()), serializer)
+            } else {
+                Err(serde::ser::Error::custom("Must be a valid date format"))
+            };
+        }
+        Option::<String>::serialize(&None, serializer)
+    }
+}
+
 #[derive(Debug)]
 pub struct SerdeError(String);
 
@@ -104,8 +151,8 @@ impl Mtb {
 
 #[cfg(test)]
 mod tests {
-    use regex::Regex;
     use super::*;
+    use regex::Regex;
 
     const MTB_JSON: &str = include_str!("../tests/mv64e-mtb-fake-patient.json");
 
@@ -116,14 +163,24 @@ mod tests {
     }
 
     #[test]
-    fn should_keep_timezone() {
-        let m = Regex::from_str(r#""birthDate":"\d{4}-\d{2}-\d{2}""#)
+    fn should_keep_patient_birthdate_format_in_year_month() {
+        let m = Regex::from_str(r#""birthDate":\s?"\d{4}-\d{2}(-\d{2})?""#)
             .unwrap()
-            .find(MTB_JSON)
-            .unwrap();
+            .replace(MTB_JSON, r#""birthDate": "2025-03""#);
 
-        let mtbfile = Mtb::from_str(MTB_JSON).unwrap();
+        let mtbfile = Mtb::from_str(&m).unwrap();
         let actual = serde_json::to_string(&mtbfile).unwrap();
-        assert!(actual.contains(m.as_str()));
+        assert!(actual.contains(r#""birthDate":"2025-03""#));
+    }
+
+    #[test]
+    fn should_convert_patient_birthdate_format_in_year_month() {
+        let m = Regex::from_str(r#""birthDate":\s?"\d{4}-\d{2}(-\d{2})?""#)
+            .unwrap()
+            .replace(MTB_JSON, r#""birthDate": "2025-03-19""#);
+
+        let mtbfile = Mtb::from_str(&m).unwrap();
+        let actual = serde_json::to_string(&mtbfile).unwrap();
+        assert!(actual.contains(r#""birthDate":"2025-03""#));
     }
 }
