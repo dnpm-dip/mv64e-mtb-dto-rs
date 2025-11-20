@@ -115,7 +115,7 @@ impl Mtb {
             patient: Patient {
                 address: None,
                 age: None,
-                birth_date: String::new(),
+                birth_date: "1900-01".to_string(),
                 date_of_death: None,
                 gender: GenderCoding {
                     code: GenderCodingCode::Female,
