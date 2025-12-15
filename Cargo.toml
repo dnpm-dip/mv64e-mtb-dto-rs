@@ -1,6 +1,6 @@
 [package]
 name = "mv64e-mtb-dto"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 authors = ["Paul-Christian Volkmer <code@pcvolkmer.de>"]
