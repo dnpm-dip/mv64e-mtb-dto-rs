@@ -2241,10 +2241,10 @@ pub struct RnaFusionFusionPartner3Prime {
 #[serde(deny_unknown_fields)]
 pub enum RnaFusionStrand {
     #[serde(rename = "+")]
-    Empty,
+    Plus,
 
     #[serde(rename = "-")]
-    RnaFusionStrand,
+    Minus,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
